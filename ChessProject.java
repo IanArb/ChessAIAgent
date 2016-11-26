@@ -70,12 +70,12 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         }
 
         // Setting up the Initial Chess board.
-/*
-  	for(int i=8;i < 16; i++){
-       		pieces = new JLabel( new ImageIcon("WhitePawn.png") );
-			panels = (JPanel)chessBoard.getComponent(i);
-	        panels.add(pieces);
-		}*/
+
+        for (int i = 8; i < 16; i++) {
+            pieces = new JLabel(new ImageIcon("WhitePawn.png"));
+            panels = (JPanel) chessBoard.getComponent(i);
+            panels.add(pieces);
+        }
         pieces = new JLabel(new ImageIcon("WhiteRook.png"));
         panels = (JPanel) chessBoard.getComponent(0);
         panels.add(pieces);
@@ -143,13 +143,61 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
       bottom of the board it turns into a Queen (this should be handled where the move is actually being made and not in this
       method).
     */
-    private Stack getWhitePawnSquares(int x, int y, String piece) {
+    private Stack getPawnSquares(int x, int y, String piece) {
+        Square startingSquare = new Square(x, y, piece);
         Stack moves = new Stack();
+        Move validM, validM2, validM3, validM4;
 
-// To be completed...
+        for (int i = 1; i < 2; i++) {
+            int tmpx = x;
+            int tmpy = y + i;
+            //A check to ensure our piece is not off the board (7 is the amount of squares on the y coordinates)
+            if (!(tmpy > 7)) {
+                Square tmp = new Square(tmpx, tmpy, piece);
+                validM = new Move(startingSquare, tmp);
+                if (!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
+                    moves.push(validM);
+                }
+            }
+        }
+
+        for(int i = 1; i < 3; i++) {
+            int tmpy = y + i;
+            int tmpx = x;
+            //A check to ensure our piece is not off the board (7 is the amount of squares on the y coordinates)
+            if(!(tmpy > 7)) {
+                // To make the pawn move twice from starting position, we set a condition for y == 1
+                if(y == 1) {
+                    Square tmp = new Square(tmpx, tmpy, piece);
+                    validM2 = new Move(startingSquare, tmp);
+                    if(!piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
+                        moves.push(validM2);
+                    }
+                }
+            }
+        }
+
+
 
         return moves;
     }
+
+    /*                                       _|_____________|_________|_____________|_
+                                              |             |         |             |
+                                              |             |(x, y+2) |             |
+                                             _|_____________|_________|_____________|_
+                                              |             |         |             |
+                                              | (x-1, y-1)  |(x, y+1) | (x+1, y+1)  |
+                                             _|_____________|_________|_____________|_
+                                              |             |         |             |
+                                              |             | (x, y)  |             |
+                                             _|_____________|_________|_____________|_
+                                              |             |         |             |
+                                              |             |         |             |
+                                             _|_____________|_________|_____________|_
+                                              |             |         |             |
+
+    */
 
 
     /*
@@ -172,6 +220,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 
 
     */
+
     private Boolean checkSurroundingSquares(Square s) {
         Boolean possible = false;
         int x = s.getXC() * 75;
@@ -816,15 +865,18 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
       /*
           We need to identify all the possible moves that can be made by the AI Opponent
       */
+
             if (tmpString.contains("Knight")) {
-                //    tmpMoves = getKnightMoves(s.getXC(), s.getYC(), s.getName());
+                tmpMoves = getKnightMoves(s.getXC(), s.getYC(), s.getName());
             } else if (tmpString.contains("Bishop")) {
-                //    tmpMoves = getBishopMoves(s.getXC(), s.getYC(), s.getName());
+                tmpMoves = getBishopMoves(s.getXC(), s.getYC(), s.getName());
             } else if (tmpString.contains("Pawn")) {
+                //tmpMoves = getPawnMoves(s.getXC(), s.getYC(), s.getName());
+                tmpMoves = getPawnSquares(s.getXC(), s.getYC(), s.getName());
             } else if (tmpString.contains("Rook")) {
-                //  tmpMoves = getRookMoves(s.getXC(), s.getYC(), s.getName());
+                tmpMoves = getRookMoves(s.getXC(), s.getYC(), s.getName());
             } else if (tmpString.contains("Queen")) {
-                //  tmpMoves = getQueenMoves(s.getXC(), s.getYC(), s.getName());
+                tmpMoves = getQueenMoves(s.getXC(), s.getYC(), s.getName());
             } else if (tmpString.contains("King")) {
                 tmpMoves = getKingSquares(s.getXC(), s.getYC(), s.getName());
             }
@@ -1298,7 +1350,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                 } else if (!pieceMove(landingX, landingY)) {
                     validMove = false;
                 } else {
-		          /*
+                  /*
 			           The Queen can either move like the Rook or a Bishop...You already have this code working!
 
                  The first check is to see if the Queen is making a valid Bishop Like move...

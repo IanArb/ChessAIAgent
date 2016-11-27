@@ -143,6 +143,22 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
       bottom of the board it turns into a Queen (this should be handled where the move is actually being made and not in this
       method).
     */
+
+    /*
+                                             _|_____________|_________|_____________|_
+                                              |             |         |             |
+                                              |             |         |             |
+                                             _|_____________|_________|_____________|_
+                                              |             |         |             |
+                                              |             | (x, y)  |             |
+                                             _|_____________|_________|_____________|_
+                                              |             |         |             |
+                                              | (x-1, y+1)  |(x, y+1) | (x+1, y+1)  |
+                                             _|_____________|_________|_____________|_
+                                              |             |         |             |
+                                              |             |(x, y+2) |             |
+                                             _|_____________|_________|_____________|_
+    */
     private Stack getPawnSquares(int x, int y, String piece) {
         Square startingSquare = new Square(x, y, piece);
         Stack moves = new Stack();
@@ -180,50 +196,36 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         for(int i = 1; i < 2; i++) {
             int tmpy = y + i;
             int tmpx = x + i;
-            getOpponentPiece(piece, startingSquare, moves, tmpy, tmpx);
+            //A check to ensure our piece is not off the board on the x axis
+            if(!(tmpx > 7 || tmpx < 0 || tmpy > 7 || tmpy < 0)) {
+                Square tmp = new Square(tmpx, tmpy, piece);
+                validM3 = new Move(startingSquare, tmp);
+                takeOpponentPiece(moves, validM3, tmp);
+            }
         }
 
         for(int i = 1; i < 2; i++) {
             int tmpy = y + i;
             int tmpx = x - i;
-            getOpponentPiece(piece, startingSquare, moves, tmpy, tmpx);
+            if(!(tmpx > 7 || tmpx < 0 || tmpy > 7 || tmpy < 0)) {
+                Square tmp = new Square(tmpx, tmpy, piece);
+                validM4 = new Move(startingSquare, tmp);
+                takeOpponentPiece(moves, validM4, tmp);
+            }
         }
 
 
         return moves;
     }
 
-    private void getOpponentPiece(String piece, Square startingSquare, Stack moves, int tmpy, int tmpx) {
-        Move validM4;
-        //A check to ensure our piece is not off the board on the x axis
-        if(!(tmpx > 7 || tmpx < 0 || tmpy > 7 || tmpy < 0)) {
-            Square tmp = new Square(tmpx, tmpy, piece);
-            validM4 = new Move(startingSquare, tmp);
-            //Before we take an opponent's piece we need to check if there is a piece present in the x axis
-            if(piecePresent(((tmp.getXC() * 75) + 20), ((tmp.getYC() * 75) + 20))) {
-                if(checkWhiteOponent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
-                    moves.push(validM4);
-                }
+    private void takeOpponentPiece(Stack moves, Move validMove, Square tmp) {
+        //Before we take an opponent's piece we need to check if there is a piece present in the x axis
+        if(piecePresent(((tmp.getXC() * 75) + 20), ((tmp.getYC() * 75) + 20))) {
+            if(checkWhiteOponent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
+                moves.push(validMove);
             }
         }
     }
-
-    /*                                       _|_____________|_________|_____________|_
-                                              |             |         |             |
-                                              |             |(x, y+2) |             |
-                                             _|_____________|_________|_____________|_
-                                              |             |         |             |
-                                              | (x-1, y-1)  |(x, y+1) | (x+1, y+1)  |
-                                             _|_____________|_________|_____________|_
-                                              |             |         |             |
-                                              |             | (x, y)  |             |
-                                             _|_____________|_________|_____________|_
-                                              |             |         |             |
-                                              |             |         |             |
-                                             _|_____________|_________|_____________|_
-                                              |             |         |             |
-
-    */
 
 
     /*

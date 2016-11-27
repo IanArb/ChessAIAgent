@@ -177,9 +177,35 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             }
         }
 
+        for(int i = 1; i < 2; i++) {
+            int tmpy = y + i;
+            int tmpx = x + i;
+            getOpponentPiece(piece, startingSquare, moves, tmpy, tmpx);
+        }
+
+        for(int i = 1; i < 2; i++) {
+            int tmpy = y + i;
+            int tmpx = x - i;
+            getOpponentPiece(piece, startingSquare, moves, tmpy, tmpx);
+        }
 
 
         return moves;
+    }
+
+    private void getOpponentPiece(String piece, Square startingSquare, Stack moves, int tmpy, int tmpx) {
+        Move validM4;
+        //A check to ensure our piece is not off the board on the x axis
+        if(!(tmpx > 7 || tmpx < 0 || tmpy > 7 || tmpy < 0)) {
+            Square tmp = new Square(tmpx, tmpy, piece);
+            validM4 = new Move(startingSquare, tmp);
+            //Before we take an opponent's piece we need to check if there is a piece present in the x axis
+            if(piecePresent(((tmp.getXC() * 75) + 20), ((tmp.getYC() * 75) + 20))) {
+                if(checkWhiteOponent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
+                    moves.push(validM4);
+                }
+            }
+        }
     }
 
     /*                                       _|_____________|_________|_____________|_

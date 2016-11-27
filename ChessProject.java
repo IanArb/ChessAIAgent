@@ -164,6 +164,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         Stack moves = new Stack();
         Move validM, validM2, validM3, validM4;
 
+        // Allows AI agent to move once
         for (int i = 1; i < 2; i++) {
             int tmpx = x;
             int tmpy = y + i;
@@ -177,6 +178,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             }
         }
 
+        // Allows AI agent to move twice while y position == 1
         for(int i = 1; i < 3; i++) {
             int tmpy = y + i;
             int tmpx = x;
@@ -193,6 +195,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             }
         }
 
+        // Allows AI agent to take a piece while y + 1 and x + 1
         for(int i = 1; i < 2; i++) {
             int tmpy = y + i;
             int tmpx = x + i;
@@ -204,6 +207,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             }
         }
 
+        // Allows AI agent to a piece while y + 1 and x - 1
         for(int i = 1; i < 2; i++) {
             int tmpy = y + i;
             int tmpx = x - i;

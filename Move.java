@@ -1,21 +1,24 @@
-class Move{
-  Square start;
-  Square landing;
 
-  public Move(Square x, Square y){
-    start = x;
-    landing = y;
-  }
+public class Move {
 
-  public Move(){
-    
-  }
+    Square start;
+    Square landing;
+//    Double score;
 
-  public Square getStart(){
-    return start;
-  }
+    public Move(Square x, Square y) {
+        start = x;
+        landing = y;
+    }
 
-  public Square getLanding(){
-    return landing;
-  }
+    public Move() {
+
+    }
+
+    public Square getStart() {
+        return start;
+    }
+
+    public Square getLanding() {
+        return landing;
+    }
 }

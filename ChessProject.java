@@ -1,19 +1,13 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.util.Stack;
 import javax.swing.*;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
-import javax.swing.border.EtchedBorder;
 import javax.swing.ImageIcon;
-import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 
 /*
 	This class can be used as a starting point for creating your Chess game project. The only piece that
@@ -21,6 +15,8 @@ import javax.swing.BoxLayout;
 */
 
 public class ChessProject extends JFrame implements MouseListener, MouseMotionListener {
+    private static Object[] options;
+    private static int n;
     JLayeredPane layeredPane;
     JPanel chessBoard;
     JLabel chessPiece;
@@ -39,6 +35,12 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
     AIAgent agent;
     Boolean agentwins;
     Stack temporary;
+
+    public int optionPicked;
+
+    public void optionPicked(int n){
+        optionPicked = n;
+    }
 
 
     public ChessProject(){
@@ -188,11 +190,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             if (!(tmpx > 7 || tmpx < 0 || tmpy > 7 || tmpy < 0)) {
                 Square tmp = new Square(tmpx, tmpy, piece);
                 validM3 = new Move(startingSquare, tmp);
-                if (piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
-                    if (checkWhiteOponent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
-                        moves.push(validM3);
-                    }
-                }
+                getOpponent(moves, validM3, tmp);
             }
         }
 
@@ -202,16 +200,20 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             if(!(tmpx > 7 || tmpx < 0 || tmpy > 7 || tmpy < 0)) {
                 Square tmp = new Square(tmpx, tmpy, piece);
                 validM4 = new Move(startingSquare, tmp);
-                if (piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
-                    if (checkWhiteOponent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
-                        moves.push(validM4);
-                    }
-                }
+                getOpponent(moves, validM4, tmp);
             }
         }
 
 
         return moves;
+    }
+
+    private void getOpponent(Stack moves, Move validMove, Square tmp) {
+        if (piecePresent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
+            if (checkWhiteOponent(((tmp.getXC() * 75) + 20), (((tmp.getYC() * 75) + 20)))) {
+                moves.push(validMove);
+            }
+        }
     }
 
 
@@ -991,7 +993,22 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             System.out.println("=============================================================");
             Border redBorder = BorderFactory.createLineBorder(Color.RED, 3);
 //Was going to put an If statement here to select the AI agent based on the button pressed by the player, but couldn't get it finished
-            Move selectedMove = agent.nextBestMove(testing, black);
+
+            Move selectedMove;
+            switch (n) {
+                case 0:
+                    selectedMove = agent.randomMove(testing);
+                    break;
+                case 1:
+                    selectedMove = agent.nextBestMove(testing, black);
+                    break;
+                case 2:
+                    selectedMove = agent.randomMove(testing);
+                    break;
+                default:
+                    selectedMove = agent.randomMove(testing);
+            }
+
             Square startingPoint = (Square)selectedMove.getStart();
             Square landingPoint = (Square)selectedMove.getLanding();
             int startX1 = (startingPoint.getXC()*75)+20;
@@ -1846,8 +1863,8 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         frame.setResizable(true);
         frame.setLocationRelativeTo( null );
         frame.setVisible(true);
-        Object[] options = {"Random Moves","Best Next Move","Based on Opponents Moves"};
-        int n = JOptionPane.showOptionDialog(frame,"Lets play some Chess, choose your AI opponent","Introduction to AI Continuous Assessment", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,null,options,options[2]);
+        Object[] options = new Object[]{"Random Moves", "Best Next Move", "Based on Opponents Moves"};
+        n = JOptionPane.showOptionDialog(frame,"Lets play some Chess, choose your AI opponent","Introduction to AI Continuous Assessment", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,null,options,options[2]);
         System.out.println("The selected variable is : "+n);
         frame.makeAIMove();
     }

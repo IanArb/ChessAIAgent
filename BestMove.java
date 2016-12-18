@@ -5,6 +5,7 @@ import java.util.Stack;
  *
  */
 public class BestMove {
+
     private Stack whiteStack;
     private Stack blackStack;
     private Stack black;
@@ -38,22 +39,30 @@ public class BestMove {
 
             calculateCenter(currentMove);
 
-            //Reload Black pieces
             black = (Stack) blackStack.clone();
         }
         return this;
     }
 
     private void calculateCenter(Move currentMove) {
-        int weight;//If the center of the board is available, these lines of code will attempt to occupy the center
-        if ((currentMove.getStart().getYC() < currentMove.getLanding().getYC())
-                && (currentMove.getLanding().getXC() == 3) && (currentMove.getLanding().getYC() == 3)
-                || (currentMove.getLanding().getXC() == 4) && (currentMove.getLanding().getYC() == 3)
-                || (currentMove.getLanding().getXC() == 3) && (currentMove.getLanding().getYC() == 4)
-                || (currentMove.getLanding().getXC() == 4) && (currentMove.getLanding().getYC() == 4)) {
+        int weight;
+
+        int yLanding = currentMove.getLanding().getYC();
+        int yStart = currentMove.getStart().getYC();
+        int xLanding = currentMove.getLanding().getXC();
+
+        boolean isXCorPos1 = xLanding == 3;
+        boolean isYCorPos1 = yLanding == 3;
+        boolean isXCorPos2 = xLanding == 4;
+        boolean isYCorPos2 = yLanding == 4;
+
+        if ((yStart < xLanding)
+                && isXCorPos1 && isYCorPos1
+                || isXCorPos2 && isYCorPos1
+                || isXCorPos1 && isYCorPos2
+                || isXCorPos2 && isYCorPos2) {
             weight = 1;
 
-            //Update the bestmove
             if (weight > topWeight) {
                 topWeight = weight;
                 bestMove = currentMove;
@@ -63,32 +72,35 @@ public class BestMove {
 
     private void calculateMoves(Move currentMove) {
         int weight;
-        Square blackPosition;//Compare the White landing positions to the Black positions. If there is an available space, return capture else return random if not.
+        //Compare the white landing positions to the black positions.
+        Square blackPosition;
         while (!black.isEmpty()) {
             weight = 0;
             blackPosition = (Square) black.pop();
-            if ((currentMove.getLanding().getXC() == blackPosition.getXC()) && (currentMove.getLanding().getYC() == blackPosition.getYC())) {
-                //Check piece weight
+            // Get landing positions for black piece and assign values
+            boolean isValidBlackXCor = currentMove.getLanding().getXC() == blackPosition.getXC();
+            boolean isValidBlackYCor = currentMove.getLanding().getYC() == blackPosition.getYC();
+            if (isValidBlackXCor && isValidBlackYCor) {
                 switch (blackPosition.getName()) {
-                    case "BlackPawn":
+                    case BlackPieceType.BLACK_PAWN:
                         weight = 2;
                         break;
-                    case "BlackBishop":
-                    case "BlackKnight":
+                    case BlackPieceType.BLACK_BISHOP:
+                    case BlackPieceType.BLACK_KNIGHT:
                         weight = 3;
                         break;
-                    case "BlackRook":
+                    case BlackPieceType.BLACK_ROOK:
                         weight = 4;
                         break;
-                    case "BlackQueen":
+                    case BlackPieceType.BLACK_QUEEN:
                         weight = 5;
                         break;
-                    case "BlackKing":
+                    case BlackPieceType.BLACK_KING:
                         weight = 6;
                         break;
                 }
             }
-            //Update the Bestmove
+            
             if (weight > topWeight) {
                 topWeight = weight;
                 bestMove = currentMove;

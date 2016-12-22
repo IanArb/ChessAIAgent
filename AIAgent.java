@@ -31,6 +31,7 @@ public class AIAgent{
         bestMove = null;
 
         BestMove bestMoveObject = new BestMove(whiteStack, blackStack, black, bestMove, value).invoke();
+        //Retrieve max value and best move object
         value = bestMoveObject.getMaxValue();
         bestMove = bestMoveObject.getBestMove();
         // If available, use the best move.
@@ -38,7 +39,7 @@ public class AIAgent{
             System.out.println("The AI selected the next best move " + bestMove);
             return bestMove;
         }
-        //return random if best move not available
+        //Return random move if best move is not available
         return randomMove(random);
 
     }
@@ -59,12 +60,12 @@ public class AIAgent{
         if(depth == PieceConstants.MAX_DEPTH) {
             return null;
         }
-        // If available, use the best move.
+
         if (value > 0) {
             //Print out for testing
             System.out.println("The AI selected the next best move " + bestMove);
             //Use recursion for deep search
-            return twoLevelsDeep(whiteStack, blackStack, depth -1);
+            return twoLevelsDeep(whiteStack, blackStack, depth);
         }
         //return bestMove if two levels deep move not available
         return nextBestMove(whiteStack, blackStack);

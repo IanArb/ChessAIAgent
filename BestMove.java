@@ -32,13 +32,17 @@ public class BestMove {
         Move whiteMove;
         Move currentMove;
         while (!whiteStack.empty()) {
+            //Retrieve our possible current white moves from the stack
             whiteMove = (Move) whiteStack.pop();
             currentMove = whiteMove;
 
+            //Call our method to calculate the best move
             calculateMoves(currentMove);
 
+            //Call our method to calculate center pieces move
             calculateCenter(currentMove);
 
+            //Generate copy of our black moves
             black = (Stack) blackStack.clone();
         }
         return this;
@@ -86,24 +90,29 @@ public class BestMove {
             if (isValidBlackXCor && isValidBlackYCor) {
                 switch (blackPosition.getName()) {
                     case PieceConstants.BLACK_PAWN:
+                        //Assign constant value = 1
                         value = PieceConstants.PAWN_VALUE;
                         break;
                     case PieceConstants.BLACK_BISHOP:
                     case PieceConstants.BLACK_KNIGHT:
+                        //Assign constant value = 3
                         value = PieceConstants.BISHOP_KNIGHT_VALUE;
                         break;
                     case PieceConstants.BLACK_ROOK:
+                        //Assign constant value = 5
                         value = PieceConstants.ROOK_VALUE;
                         break;
                     case PieceConstants.BLACK_QUEEN:
+                        //Assign constant value = 9
                         value = PieceConstants.QUEEN_VALUE;
                         break;
                     case PieceConstants.BLACK_KING:
+                        //Assign constant value = infinity
                         value = PieceConstants.KING_VALUE;
                         break;
                 }
             }
-            
+            //Assign the best move
             if (value > maxValue) {
                 maxValue = value;
                 bestMove = currentMove;

@@ -3,7 +3,6 @@ public class Move {
 
     Square start;
     Square landing;
-//    Double score;
 
     public Move(Square x, Square y) {
         start = x;

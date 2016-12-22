@@ -31,7 +31,6 @@ public class AIAgent{
         bestMove = null;
 
         BestMove bestMoveObject = new BestMove(whiteStack, blackStack, black, bestMove, value).invoke();
-        //Retrieve max value and best move object
         value = bestMoveObject.getMaxValue();
         bestMove = bestMoveObject.getBestMove();
         // If available, use the best move.
@@ -39,13 +38,13 @@ public class AIAgent{
             System.out.println("The AI selected the next best move " + bestMove);
             return bestMove;
         }
-        //Return random move if best move is not available
+        //return random if best move not available
         return randomMove(random);
 
     }
 
 
-    // My AI implementation would be considered as a "dumb" AI
+    // Apparently the code provided for the options on start has a small bug where this method affects random move from getting executed
 
     public Move twoLevelsDeep(Stack whiteStack, Stack blackStack, int depth) {
         Stack black = (Stack) blackStack.clone();
@@ -58,14 +57,14 @@ public class AIAgent{
         bestMove = bestMoveObject.getBestMove();
 
         if(depth == PieceConstants.MAX_DEPTH) {
-            return null;
+            return bestMove;
         }
-
+        // If available, use the best move.
         if (value > 0) {
             //Print out for testing
             System.out.println("The AI selected the next best move " + bestMove);
             //Use recursion for deep search
-            return twoLevelsDeep(whiteStack, blackStack, depth);
+            return twoLevelsDeep(whiteStack, blackStack, depth -1);
         }
         //return bestMove if two levels deep move not available
         return nextBestMove(whiteStack, blackStack);

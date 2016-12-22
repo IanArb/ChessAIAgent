@@ -913,7 +913,8 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
             int depth = PieceConstants.MAX_DEPTH;
             switch (n) {
                 case 0:
-                    selectedMove = agent.twoLevelsDeep(testing, black, depth);
+                    //selectedMove = agent.twoLevelsDeep(testing, black, depth);
+                    selectedMove = agent.randomMove(testing);
                     break;
                 case 1:
                     selectedMove = agent.nextBestMove(testing, black);
@@ -923,6 +924,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
                     break;
                 default:
                     selectedMove = agent.randomMove(testing);
+                    break;
             }
 
             Square startingPoint = (Square)selectedMove.getStart();
